@@ -10,8 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Email {
 
-    @Column(name = "email", nullable = false, unique = true, length = 255)
+    @jakarta.validation.constraints.Email
+    @Column(name = "email", nullable = false, unique = true)
     private String value;
+
+    public static Email of(String value) {
+        return new Email(value);
+    }
 
     public Email(String value) {
         this.value = normalize(value);
