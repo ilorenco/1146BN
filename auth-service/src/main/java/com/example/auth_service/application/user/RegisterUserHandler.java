@@ -1,5 +1,6 @@
 package com.example.auth_service.application.user;
 
+import com.example.auth_service.application.ports.PasswordHasher;
 import com.example.auth_service.domain.user.User;
 import com.example.auth_service.domain.user.UserRepository;
 import com.example.auth_service.domain.user.vo.Email;
@@ -13,11 +14,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RegisterUserHandler {
     private final UserRepository userRepository;
+    private final PasswordHasher passwordHasher;
 
     @Transactional
     public UserResponse handle(String nome, String emailRaw, String senha) {
         Email email = Email.of(emailRaw);
-        User user = new User(nome, senha, email, RoleType.CUSTOMER);
+
+        String hash = passwordHasher.hash(senha);
+        User user = new User(nome, hash, email, RoleType.CUSTOMER);
 
         User saved = userRepository.save(user);
         return new UserResponse(
