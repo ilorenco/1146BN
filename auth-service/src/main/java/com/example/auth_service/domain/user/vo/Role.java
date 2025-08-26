@@ -20,6 +20,8 @@ public class Role {
         if (value == null) {
             throw new IllegalArgumentException("Role deve ser definida");
         }
+
+        this.value = value;
     }
 
     public static Role of(RoleType value) {
