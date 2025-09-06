@@ -7,6 +7,12 @@ import com.example.auth_service.interfaces.rest.dto.auth.MagicLinkRequest;
 import com.example.auth_service.interfaces.rest.dto.auth.MagicLinkVerifyRequest;
 import com.example.auth_service.interfaces.rest.dto.auth.PasswordLoginRequest;
 import com.example.auth_service.interfaces.rest.dto.auth.TokenResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Endpoints para autenticação de usuários")
 public class AuthController {
     private final PasswordLoginHandler passwordLoginHandler;
     private final RequestMagicLinkHandler requestMagicLinkHandler;
