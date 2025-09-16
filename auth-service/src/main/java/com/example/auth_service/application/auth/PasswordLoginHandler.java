@@ -25,7 +25,7 @@ public class PasswordLoginHandler {
         Email email = Email.of(emailRaw);
         Optional<User> userOptional = userRepository.findByEmail(email.getValue());
 
-        if (userOptional.isPresent()) {
+        if (!userOptional.isPresent()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credencial invalido");
         }
 
