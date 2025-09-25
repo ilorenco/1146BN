@@ -50,7 +50,7 @@ public class AuthController {
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping("login/magic/verify")
+    @PostMapping("/login/magic/verify")
     public ResponseEntity<TokenResponse> verifyMagic(@Valid @RequestBody MagicLinkVerifyRequest request) {
         TokenResponse tokenResponse = verifyMagicLinkHandler.handle(request.token());
 
