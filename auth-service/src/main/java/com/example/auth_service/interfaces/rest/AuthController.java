@@ -36,6 +36,28 @@ public class AuthController {
     private final RefreshTokenHandler refreshTokenHandler;
     private final LogoutHandler logoutHandler;
 
+    @Operation(
+        summary = "Login com senha", 
+        description = "Autentica um usuário usando email e senha, retornando tokens de acesso e refresh"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                responseCode = "200", 
+                description = "Login realizado com sucesso",
+                content = @Content(
+                    mediaType = "application/json", 
+                    schema = @Schema(implementation = TokenResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "401", 
+                description = "Credenciais inválidas - email ou senha incorretos"
+            ),
+            @ApiResponse(
+                responseCode = "400", 
+                description = "Dados de entrada inválidos - formato de email inválido ou campos obrigatórios ausentes"
+            )
+    })
     @PostMapping("/login/password")
     public ResponseEntity<TokenResponse> loginWithPassword(@Valid @RequestBody PasswordLoginRequest request) {
         TokenResponse token = passwordLoginHandler.handle(request.email(), request.password());
@@ -43,6 +65,20 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
+    @Operation(
+        summary = "Solicitar link mágico", 
+        description = "Envia um link mágico por email para autenticação sem senha"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                responseCode = "202", 
+                description = "Solicitação aceita - link mágico enviado por email (se o email existir no sistema)"
+            ),
+            @ApiResponse(
+                responseCode = "400", 
+                description = "Dados de entrada inválidos - formato de email inválido ou campo obrigatório ausente"
+            )
+    })
     @PostMapping("/login/magic")
     public ResponseEntity<Void> requestMagic(@Valid @RequestBody MagicLinkRequest req) {
         requestMagicLinkHandler.handle(req.email());
@@ -50,6 +86,28 @@ public class AuthController {
         return ResponseEntity.accepted().build();
     }
 
+    @Operation(
+        summary = "Verificar link mágico", 
+        description = "Verifica o token do link mágico e retorna tokens de acesso e refresh"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                responseCode = "200", 
+                description = "Link mágico verificado com sucesso",
+                content = @Content(
+                    mediaType = "application/json", 
+                    schema = @Schema(implementation = TokenResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "401", 
+                description = "Token inválido ou expirado"
+            ),
+            @ApiResponse(
+                responseCode = "400", 
+                description = "Dados de entrada inválidos - token ausente ou formato inválido"
+            )
+    })
     @PostMapping("/login/magic/verify")
     public ResponseEntity<TokenResponse> verifyMagic(@Valid @RequestBody MagicLinkVerifyRequest request) {
         TokenResponse tokenResponse = verifyMagicLinkHandler.handle(request.token());
